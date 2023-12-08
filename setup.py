@@ -2,9 +2,9 @@ from setuptools import setup
 setup(
     name = 'simulation-pipeline',
     version = '0.1.0',
-    packages = ['sim'],
+    packages = ['src'],
     entry_points = {
         'console_scripts': [
-            'sim = sim.__main__:main'
+            'sim = src.__main__:main'
         ]
     })
