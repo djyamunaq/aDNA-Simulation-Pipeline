@@ -14,10 +14,12 @@ def main():
 
     # Clear previous endo data
     subprocess.run(['rm', '-rf', ])
-    # Move data to default location
+    # Move data to default endo location
     subprocess.run(['cp', args.refDNA, os.path.join(os.path.dirname(__file__), './.data/endo/')])
+    
     # Run gargammel simulation
     subprocess.run([os.path.join(os.path.dirname(__file__),'./gargammel/gargammel.pl'), os.path.join(os.path.dirname(__file__), './.data/')])
+    
     # Remove output dir if it exists
     subprocess.run(['rm', '-rf', args.output])
     # Create output
