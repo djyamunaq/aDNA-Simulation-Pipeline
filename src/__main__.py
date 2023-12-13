@@ -26,19 +26,22 @@ def main():
     args: Namespace = parser.parse_args()
 
     # Clear previous endo data
-    subprocess.run(['rm', '-rf', os.path.join(os.path.dirname(__file__), './.data/endo/*')])
+    # subprocess.run(['rm', '-rf', os.path.join(os.path.dirname(__file__), './.data/endo/*')])
+
     # Move data to default endo location
     subprocess.run(['cp', args.refDNA, os.path.join(os.path.dirname(__file__), './.data/endo/')])
 
     # Create loading script
-    file = open(os.path.join(os.path.dirname(__file__),'./temp'), 'a')
-    subprocess.run(['sudo', 'echo', '-e', '#!/bin/bash\n\n"\$@" &\n\nwhile kill -0 \$!; do\n\tprintf \'.\' > /dev/tty\n\tsleep 1\ndone\nprintf \'\\\\n\' > /dev/tty'], stdout=file)
-    file.close()
+    # file = open(os.path.join(os.path.dirname(__file__),'./temp'), 'a')
+    # subprocess.run(['sudo', 'echo', '-e', '#!/bin/bash\n\n"\$@" &\n\nwhile kill -0 \$!; do\n\tprintf \'.\' > /dev/tty\n\tsleep 1\ndone\nprintf \'\\\\n\' > /dev/tty'], stdout=file)
+    # file.close()
 
+    print()
     printRunningMessage('Gargammel')
 
     # Run gargammel simulation
-    subprocess.run(['sudo', os.path.join(os.path.dirname(__file__),'./temp'), os.path.join(os.path.dirname(__file__),'./gargammel/gargammel.pl'), os.path.join(os.path.dirname(__file__), './.data/'),  '>>', '/dev/null', '2', '>', '&1'])
+    subprocess.run([os.path.join(os.path.dirname(__file__),'./gargammel/gargammel.pl'), os.path.join(os.path.dirname(__file__), '.data/')])
+    print()
 
     printEndOfToolMessage('Gargammel')
 
@@ -54,7 +57,7 @@ def main():
     subprocess.run(['gzip', '-d', '-q', '-f', os.path.join(args.output, 'simadna_s2.fq.gz')])
 
     # Remove temporary loading file
-    subprocess.run(['rm', 'temp'])
+    # subprocess.run(['rm', 'temp'])
     
     printEndOfPipelineMessage()
 

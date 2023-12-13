@@ -1,3 +1,4 @@
+rm ./src/temp >> /dev/null 2>&1
 echo -e "#!/bin/bash\n\n"\$@" &\nwhile kill -0 \$!; do\n\tprintf '.' > /dev/tty\n\tsleep 1\ndone\nprintf '\\n' > /dev/tty" >> src/temp
 echo -n "> Updating packages "
 sudo ./src/temp apt update >> /dev/null 2>&1
