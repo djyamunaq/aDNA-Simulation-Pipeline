@@ -1,6 +1,6 @@
 simulation_pipeline.egg-info
 __pycache__
-src/gargammel/
-src/.data/
-output/
-src/temp/
+src/gargammel
+src/.data
+output
+src/temp
