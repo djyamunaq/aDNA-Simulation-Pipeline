@@ -1,6 +1,19 @@
 from argparse import ArgumentParser, Namespace
+from colorama import Fore, Back, Style
 import subprocess
 import os
+
+def printRunningMessage(toolName):
+    print(Fore.BLUE + Style.BRIGHT + '> Running on', toolName)
+    print(Style.RESET_ALL)
+
+def printEndOfPipelineMessage():
+    print(Fore.GREEN + Style.BRIGHT + '> Pipeline finished')
+    print(Style.RESET_ALL)
+
+def printEndOfToolMessage(toolName):
+    print(Fore.GREEN + Style.BRIGHT + '> Ended running on', toolName)
+    print(Style.RESET_ALL)
 
 def main():
     parser = ArgumentParser()
@@ -13,13 +26,22 @@ def main():
     args: Namespace = parser.parse_args()
 
     # Clear previous endo data
-    subprocess.run(['rm', '-rf', ])
+    subprocess.run(['rm', '-rf', os.path.join(os.path.dirname(__file__), './.data/endo/*')])
     # Move data to default endo location
     subprocess.run(['cp', args.refDNA, os.path.join(os.path.dirname(__file__), './.data/endo/')])
-    
+
+    # Create loading script
+    file = open(os.path.join(os.path.dirname(__file__),'./temp'), 'a')
+    subprocess.run(['sudo', 'echo', '-e', '#!/bin/bash\n\n"\$@" &\n\nwhile kill -0 \$!; do\n\tprintf \'.\' > /dev/tty\n\tsleep 1\ndone\nprintf \'\\\\n\' > /dev/tty'], stdout=file)
+    file.close()
+
+    printRunningMessage('Gargammel')
+
     # Run gargammel simulation
-    subprocess.run([os.path.join(os.path.dirname(__file__),'./gargammel/gargammel.pl'), os.path.join(os.path.dirname(__file__), './.data/')])
-    
+    subprocess.run(['sudo', os.path.join(os.path.dirname(__file__),'./temp'), os.path.join(os.path.dirname(__file__),'./gargammel/gargammel.pl'), os.path.join(os.path.dirname(__file__), './.data/'),  '>>', '/dev/null', '2', '>', '&1'])
+
+    printEndOfToolMessage('Gargammel')
+
     # Remove output dir if it exists
     subprocess.run(['rm', '-rf', args.output])
     # Create output
@@ -31,6 +53,10 @@ def main():
     subprocess.run(['gzip', '-d', '-q', '-f', os.path.join(args.output, 'simadna_s1.fq.gz')])
     subprocess.run(['gzip', '-d', '-q', '-f', os.path.join(args.output, 'simadna_s2.fq.gz')])
 
+    # Remove temporary loading file
+    subprocess.run(['rm', 'temp'])
+    
+    printEndOfPipelineMessage()
 
 if __name__ == '__main__':
     main()
