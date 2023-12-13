@@ -1,5 +1,4 @@
 # aDNA-Simulation-Pipeline
-
 Pipeline for simulation of aDNA (.fq) based on reference DNA (.fa). Program works as a wrapper for Gargammel, easing the usage for generation of simulated aDNA. 
 
 ## Downloading:
@@ -8,7 +7,8 @@ $ git clone https://github.com/djyamunaq/aDNA-Simulation-Pipeline.git
 ```
 
 ## Installation:
-The file install.sh is responsible for installing necessary dependencies and setup to run the pipeline.
+The file install.sh is responsible for installing necessary dependencies and setup to run the pipeline. It's necessary to have *sudo* access in order to install the package and all the dependencies.
+
 ```
 $ cd aDNA-Simulation-Pipeline
 $ ./install.sh
