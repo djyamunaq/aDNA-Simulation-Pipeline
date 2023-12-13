@@ -5,6 +5,6 @@ setup(
     packages = ['src'],
     entry_points = {
         'console_scripts': [
-            'sim = src.__main__:main'
+            'simpipe = src.__main__:main'
         ]
     })
