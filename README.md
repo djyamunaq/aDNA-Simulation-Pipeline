@@ -1,6 +1,25 @@
 # aDNA-Simulation-Pipeline
 Pipeline for simulation of aDNA (.fq) based on reference DNA (.fa). Program works as a wrapper for Gargammel, easing the usage for generation of simulated aDNA. 
 
+## Description
+The aDNA Simulation Pipeline (Simpipe) is a tool based on Gargammel thought to make easier to generate samples of ancient DNA based on a reference DNA. 
+Simpipe installs all the necessary dependencies and deals with the files and folders structures needed to run Gargammel*. After the .fq files are generated, the pipeline collapses them from paired-ended reads into single-ended reads using the program AdapterRemoval*.
+The user only has to provide the input fasta reference file and, optionally, the output directory:
+
+```
+$ sim --refDNA <reference mtDNA> --output <output directory [Default: ./]>
+```
+
+Inside the output directory, if the pipeline runs successfully, will be found a .fq file with the reads.
+
+The tool is hosted in github (https://github.com/djyamunaq/aDNA-Simulation-Pipeline.git), where is possible to find the installation guide and basic usage instructions.
+
+*Include references when passing it to latex
+
+```
+```
+
+
 ## Downloading:
 ```
 $ git clone https://github.com/djyamunaq/aDNA-Simulation-Pipeline.git

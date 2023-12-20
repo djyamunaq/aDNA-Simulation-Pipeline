@@ -22,7 +22,7 @@ def main():
     # Set reference mtDNA from command line 
     parser.add_argument('--refDNA', help='Reference DNA that will be used to generate FASTQ of simulated aDNA')
     # Set output destionation from command line
-    parser.add_argument('--output', help='Set output destination [Default: ./output]', default='output')
+    parser.add_argument('--output', help='Set output destination [Default: ./output]', default='.')
     # Get arguments from command line
     args: Namespace = parser.parse_args()
 

@@ -1,6 +1,6 @@
 simulation_pipeline.egg-info
 __pycache__
-src/gargammel
+simpipe/gargammel
 output
 temp
 .data
