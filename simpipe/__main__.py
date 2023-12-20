@@ -1,6 +1,7 @@
 from argparse import ArgumentParser, Namespace
 from colorama import Fore, Back, Style
 import subprocess
+import shlex
 import os
 
 def printRunningMessage(toolName):
@@ -45,16 +46,32 @@ def main():
 
     printEndOfToolMessage('Gargammel')
 
+    output_dir = os.path.join(args.output, 'output')
+
     # Remove output dir if it exists
-    subprocess.run(['rm', '-rf', args.output])
-    # Create output
-    subprocess.run(['mkdir', args.output])
+    subprocess.run(['rm', '-rf', output_dir])
+    # Create output dir
+    subprocess.run(['mkdir', output_dir])
     # Move files to output dir
-    subprocess.run(['cp', os.path.join(os.path.dirname(__file__), './.data/simadna_s1.fq.gz'), os.path.join(args.output, 'simadna_s1.fq.gz')])
-    subprocess.run(['cp', os.path.join(os.path.dirname(__file__), './.data/simadna_s2.fq.gz'), os.path.join(args.output, 'simadna_s2.fq.gz')])
+    subprocess.run(['cp', os.path.join(os.path.dirname(__file__), './.data/simadna_s1.fq.gz'), os.path.join(output_dir, 'simadna_s1.fq.gz')])
+    subprocess.run(['cp', os.path.join(os.path.dirname(__file__), './.data/simadna_s2.fq.gz'), os.path.join(output_dir, 'simadna_s2.fq.gz')])
     # Decompress files and delete previous compressed files
-    subprocess.run(['gzip', '-d', '-q', '-f', os.path.join(args.output, 'simadna_s1.fq.gz')])
-    subprocess.run(['gzip', '-d', '-q', '-f', os.path.join(args.output, 'simadna_s2.fq.gz')])
+    subprocess.run(['gzip', '-d', '-q', '-f', os.path.join(output_dir, 'simadna_s1.fq.gz')])
+    subprocess.run(['gzip', '-d', '-q', '-f', os.path.join(output_dir, 'simadna_s2.fq.gz')])
+
+    # Collapse paired-ended into single-ended reads using adapterRemoval
+    subprocess.run(['AdapterRemoval', '--threads', '40', '--file1', os.path.join(output_dir, 'simadna_s1.fq'), '--file2', os.path.join(output_dir, 'simadna_s2.fq'), '--outputcollapsed', os.path.join(output_dir, 'reads.fq'), '--trimns', '--trimqualities', '--minlength', '30', '--collapse'])
+
+    # Remove not necessary output files from AdapterRemoval
+    # extract file names
+    file_list = os.listdir() 
+    file_list = list(filter(lambda file_name: file_name.startswith('your_output'), file_list))
+
+    # command sentence
+    cmd = 'rm -rf %s'
+
+    for file in file_list:
+        subprocess.Popen(shlex.split(cmd % file)) 
 
     # Remove temporary loading file
     # subprocess.run(['rm', 'temp'])
