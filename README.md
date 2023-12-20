@@ -16,10 +16,6 @@ The tool is hosted in github (https://github.com/djyamunaq/aDNA-Simulation-Pipel
 
 *Include references when passing it to latex
 
-```
-```
-
-
 ## Downloading:
 ```
 $ git clone https://github.com/djyamunaq/aDNA-Simulation-Pipeline.git
