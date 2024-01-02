@@ -23,6 +23,8 @@ def main():
     parser.add_argument('--refDNA', help='Reference DNA that will be used to generate FASTQ of simulated aDNA')
     # Set output destionation from command line
     parser.add_argument('--output', help='Set output destination [Default: ./output]', default='.')
+    # Set collapse option (Paired-ended reads to single-ended reads)
+    parser.add_argument('--collapse', action='store_true', help='Set collapse option (Paired-ended reads to single-ended reads)')
     # Get arguments from command line
     args: Namespace = parser.parse_args()
 
@@ -56,11 +58,15 @@ def main():
     subprocess.run(['cp', os.path.join(os.path.dirname(__file__), './.data/simadna_s1.fq.gz'), os.path.join(output_dir, 'simadna_s1.fq.gz')])
     subprocess.run(['cp', os.path.join(os.path.dirname(__file__), './.data/simadna_s2.fq.gz'), os.path.join(output_dir, 'simadna_s2.fq.gz')])
     # Decompress files and delete previous compressed files
-    subprocess.run(['gzip', '-d', '-q', '-f', os.path.join(output_dir, 'simadna_s1.fq.gz')])
-    subprocess.run(['gzip', '-d', '-q', '-f', os.path.join(output_dir, 'simadna_s2.fq.gz')])
+    subprocess.run(['gzip', '-d', '-q', '-f', '-v', os.path.join(output_dir, 'simadna_s1.fq.gz')])
+    subprocess.run(['gzip', '-d', '-q', '-f', '-v', os.path.join(output_dir, 'simadna_s2.fq.gz')])
+    # Rename paired ended reads
+    subprocess.run(['mv', os.path.join(output_dir, 'simadna_s1.fq'), os.path.join(output_dir, 'paired_ended_read_1.fq')])
+    subprocess.run(['mv', os.path.join(output_dir, 'simadna_s2.fq'), os.path.join(output_dir, 'paired_ended_read_2.fq')])
 
     # Collapse paired-ended into single-ended reads using adapterRemoval
-    subprocess.run(['AdapterRemoval', '--threads', '40', '--file1', os.path.join(output_dir, 'simadna_s1.fq'), '--file2', os.path.join(output_dir, 'simadna_s2.fq'), '--outputcollapsed', os.path.join(output_dir, 'reads.fq'), '--trimns', '--trimqualities', '--minlength', '30', '--collapse'])
+    if args.collapse:
+        subprocess.run(['AdapterRemoval', '--threads', '40', '--file1', os.path.join(output_dir, 'paired_ended_read_1.fq'), '--file2', os.path.join(output_dir, 'paired_ended_read_2.fq'), '--outputcollapsed', os.path.join(output_dir, 'single_ended_read.fq'), '--trimns', '--trimqualities', '--minlength', '30', '--collapse'])
 
     # Remove not necessary output files from AdapterRemoval
     # extract file names
