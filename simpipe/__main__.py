@@ -28,6 +28,10 @@ def main():
     # Get arguments from command line
     args: Namespace = parser.parse_args()
 
+    # Check file extension
+    if not (args.refDNA.endswith('.fa') or args.refDNA.endswith('.fasta')):
+        print('[ERROR] Provide a FASTA format file as reference DNA')
+
     # Clear previous endo data
     # subprocess.run(['rm', '-rf', os.path.join(os.path.dirname(__file__), './.data/endo/*')])
 
@@ -42,13 +46,11 @@ def main():
     print()
     printRunningMessage('Gargammel')
 
-    # Run gargammel simulation
-    subprocess.run([os.path.join(os.path.dirname(__file__),'./gargammel/gargammel.pl'), os.path.join(os.path.dirname(__file__), '.data/')])
     print()
 
     printEndOfToolMessage('Gargammel')
 
-    output_dir = os.path.join(args.output, 'output')
+    output_dir = os.path.join(args.output, 'gargammel')
 
     # Remove output dir if it exists
     subprocess.run(['rm', '-rf', output_dir])
