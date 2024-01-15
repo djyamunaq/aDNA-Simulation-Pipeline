@@ -1,0 +1,125 @@
+### Uncomment (Remove #) from flags and add desired value to change pipeline flow 
+### Alternatively, create your own config file with the necessary flags
+## OBS: DON'T USE WHITESPACES IN FILES PATHS OR NAMRES
+
+### Composition of the final set in fraction 
+### the 3 numbers represent the bacterial, contaminant and endogenous
+### ex: --comp 0.6,0.02,0.38 will result
+### in 60% bacterial contamination while the rest will be from the same
+### species 5% will be contamination and 95% will be endogenous
+### Default: --comp 0,0,1
+# --comp A, B, C				
+
+### Do nothing, just print the commands that will be run
+# --mock					
+	  
+### Output prefix (default: [input dir]/simadna)
+# -o [path]	
+
+### Either specify:
+## [number]		Generate [number] fragments (default: 1000)
+# -n [number]
+## [coverage]		Endogenous coverage
+# -c [coverage]
+-c 30
+
+### Fragment selection
+### ===================
+## Base misincorporation for the endogenous fragments (default none)
+# --misince	[file]		
+## Base misincorporation for the contaminant fragments (default none)
+# --misincc	[file]		
+## Base misincorporation for the bacterial fragments (default none)
+# --misincb	[file]		
+## Distance to consider for base misincorporation (default 1) this file is obtained from mapDamage
+# --distmis	[file]		
+
+### Fragment size distribution: specify either one of the 3 possible options:
+## Generate fragments of fixed length  (default: 35)
+-l 75		
+## Open file with size distribution (one fragment length per line)
+# -s	[file]			
+## Open file with size frequency in the following format: length[TAB]freq	ex: 40	0.0525, 41	0.0491 ...
+# -f	[file]
+
+### Length options:
+## Location for lognormal distribution (default none)
+# --loc	[file]		
+## Scale for lognormal distribution    (default none)
+# --scale	[file]		
+
+### Fragment size limit:
+## Minimum fragments length (default: 0)
+# --minsize	[length]	
+## Maximum fragments length (default: 1000)
+# --maxsize	[length]	
+
+### Fragment methylation:
+## Allow for lowercase C and G to denote methylated cytosines on the + and - strand respectively (default: not used)
+# --methyl			
+
+### Deamination: To add deamination to the bacterial and endogenous material,you can specify either one of these options:
+## Read the miscorporation file [mis.txt] produced by mapDamage [protocol] can be either "single" or "double" (without quotes) Single strand will have C->T damage on both ends Double strand will have and C->T at the 5' end and G->A damage at the 3' end
+# -mapdamage	[mis.txt] [protocol]	
+## Read the matrix file of substitutions Provide the prefix only, both files must end with 5.dat and 3.dat
+# -matfile	[matrix file prefix]	
+## For the Briggs et al. 2007 model. The parameters must be comma-separated e.g.: -damage 0.03,0.4,0.01,0.3
+##		                  			v: nick frequency
+##		                  			l: length of overhanging ends (geometric parameter)
+##		                  			d: prob. of deamination of Cs in double-stranded parts
+##		                  			s: prob. of deamination of Cs in single-stranded parts
+# -damage		v,l,d,s
+-damage 0.03,0.4,0.01,0.3  	
+
+### Alternatively, you can specify these options independently for the endogenous (e), bacterial (b) and present-day human contaminant (c) using the following options:
+## Endogenous mapDamage misincorporation file
+# -mapdamagee	[mis.txt] [protocol]
+## Endogenous matrix file of substitutions	
+# -matfilee	[matrix file prefix]
+## Endogenous Briggs parameters	
+# -damagee	[v,l,d,s]	  	
+## Bacterial mapDamage misincorporation file
+# -mapdamageb	[mis.txt] [protocol]	
+## Bacterial matrix file of substitutions
+# -matfileb	[matrix file prefix]
+## Bacterial Briggs parameters	
+# -damageb	[v,l,d,s]	  	
+## Human contaminant mapDamage misincorporation file
+# -mapdamagec	[mis.txt] [protocol]
+## Human contaminant matrix file of substitutions	
+# -matfilec	[matrix file prefix]
+## Human contaminant Briggs parameters	
+# -damagecd	[v,l,d,s]	  	
+
+## Please note that if you do specify deamination for one source but not for another, no deamination will be added
+
+### If using --methyl, you can also specify different matrix file for methylated
+## Read the matrix file of substitutions for non-methylated Cs. Provide the prefix only, both files must end with 5.dat and 3.dat
+# -matfilenonmeth	[matrix file prefix]	
+## Read the matrix file of substitutions for methylated Cs. Provide the prefix only, both files must end with 5.dat and 3.data
+# -matfilemeth	[matrix file prefix]	
+ 
+### Adapter and sequencing
+## Adapter that is observed after the forward read (Default: AGATCGGAAG...)
+# -fa	[seq]				
+## Adapter that is observed after the reverse read (Default: AGATCGGAAG...)
+# -sa	[seq]				
+## Desired read length  (Default: 75)
+# -rl	[length]			
+## use single-end sequencing (Default: paired-end)
+-se                             	
+
+### The following options change the sequencing error rate, please note that positive factor will decrease the rate of such errors and a negative one will increase it.
+## Increase error rate for forward reads by a factor of 1/(10^([factor]/10)) (Default: 0)
+# -qs     [factor]                	
+## Increase error rate for reverse reads by a factor of 1/(10^([factor]/10)) (Default: 0)
+# -qs2    [factor]                	
+
+## Illumina platfrom to use, the parentheses indicate the max. read length use the shorthand in the left column: (single-end, paired-end)
+## GA2  - GenomeAnalyzer II (  50bp,  75bp)
+## HS20 - HiSeq 2000        ( 100bp, 100bp)
+## HS25 - HiSeq 2500        ( 125bp, 150bp) (Default)
+## HSXt - HiSeqX TruSeq     ( 150bp, 150bp)
+## MSv1 - MiSeq v1          ( 250bp, 250bp)
+## MSv3 - MiSeq v3          ( 250bp, 250bp)
+# -ss     [system]                	
